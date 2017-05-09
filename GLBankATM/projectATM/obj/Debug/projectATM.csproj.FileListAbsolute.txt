@@ -1,0 +1,10 @@
+c:\users\pc\documents\visual studio 2015\Projects\projectATM\projectATM\bin\Debug\projectATM.exe.config
+c:\users\pc\documents\visual studio 2015\Projects\projectATM\projectATM\bin\Debug\projectATM.exe
+c:\users\pc\documents\visual studio 2015\Projects\projectATM\projectATM\bin\Debug\projectATM.pdb
+c:\users\pc\documents\visual studio 2015\Projects\projectATM\projectATM\obj\Debug\projectATM.csprojResolveAssemblyReference.cache
+c:\users\pc\documents\visual studio 2015\Projects\projectATM\projectATM\obj\Debug\projectATM.Form1.resources
+c:\users\pc\documents\visual studio 2015\Projects\projectATM\projectATM\obj\Debug\projectATM.Properties.Resources.resources
+c:\users\pc\documents\visual studio 2015\Projects\projectATM\projectATM\obj\Debug\projectATM.csproj.GenerateResource.Cache
+c:\users\pc\documents\visual studio 2015\Projects\projectATM\projectATM\obj\Debug\projectATM.exe
+c:\users\pc\documents\visual studio 2015\Projects\projectATM\projectATM\obj\Debug\projectATM.pdb
+c:\users\pc\documents\visual studio 2015\Projects\projectATM\projectATM\obj\Debug\projectATM.formATM.resources
