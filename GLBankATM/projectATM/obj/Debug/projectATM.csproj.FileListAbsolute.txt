@@ -8,3 +8,13 @@ c:\users\pc\documents\visual studio 2015\Projects\projectATM\projectATM\obj\Debu
 c:\users\pc\documents\visual studio 2015\Projects\projectATM\projectATM\obj\Debug\projectATM.exe
 c:\users\pc\documents\visual studio 2015\Projects\projectATM\projectATM\obj\Debug\projectATM.pdb
 c:\users\pc\documents\visual studio 2015\Projects\projectATM\projectATM\obj\Debug\projectATM.formATM.resources
+C:\GIT\GLBank_ATM\GLBankATM\projectATM\bin\Debug\projectATM.exe.config
+C:\GIT\GLBank_ATM\GLBankATM\projectATM\obj\Debug\projectATM.exe
+C:\GIT\GLBank_ATM\GLBankATM\projectATM\obj\Debug\projectATM.pdb
+C:\GIT\GLBank_ATM\GLBankATM\projectATM\bin\Debug\projectATM.exe
+C:\GIT\GLBank_ATM\GLBankATM\projectATM\bin\Debug\projectATM.pdb
+C:\GIT\GLBank_ATM\GLBankATM\projectATM\obj\Debug\projectATM.csprojResolveAssemblyReference.cache
+C:\GIT\GLBank_ATM\GLBankATM\projectATM\obj\Debug\projectATM.Form1.resources
+C:\GIT\GLBank_ATM\GLBankATM\projectATM\obj\Debug\projectATM.formATM.resources
+C:\GIT\GLBank_ATM\GLBankATM\projectATM\obj\Debug\projectATM.Properties.Resources.resources
+C:\GIT\GLBank_ATM\GLBankATM\projectATM\obj\Debug\projectATM.csproj.GenerateResource.Cache
