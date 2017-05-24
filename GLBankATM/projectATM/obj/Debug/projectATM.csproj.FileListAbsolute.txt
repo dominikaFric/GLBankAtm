@@ -18,3 +18,4 @@ C:\GIT\GLBank_ATM\GLBankATM\projectATM\obj\Debug\projectATM.Form1.resources
 C:\GIT\GLBank_ATM\GLBankATM\projectATM\obj\Debug\projectATM.formATM.resources
 C:\GIT\GLBank_ATM\GLBankATM\projectATM\obj\Debug\projectATM.Properties.Resources.resources
 C:\GIT\GLBank_ATM\GLBankATM\projectATM\obj\Debug\projectATM.csproj.GenerateResource.Cache
+C:\GIT\GLBank_ATM\GLBankATM\projectATM\bin\Debug\MySql.Data.dll

@@ -13,9 +13,12 @@ namespace projectATM
 
     public partial class formATM : Form
     {
+        Database db = new Database();
+
         public enum States
         {
             LANGUAGES,
+            CARD_INVALID,
             PIN,
             PIN_OK,
             PIN_WRONG,
@@ -42,16 +45,30 @@ namespace projectATM
             this.id = id;
             state = States.LANGUAGES;
             printScreen();
+            
         }
 
         private void printScreen()
         {
+            Bitmap picture = new Bitmap(ATMscreen.Width, ATMscreen.Height);
+            Graphics g = Graphics.FromImage(picture);
+            g.Clear(Color.Black);
             switch (state)
             {
                 case States.LANGUAGES:
 
+                    g.DrawString("Choose a language", new Font("Consolas", 14), Brushes.White, new Point(100, 100));
+                    g.DrawString("SLOVAK", new Font("Consolas", 14), Brushes.White,new Point(10,225));
+                    g.DrawString("ENGLISH", new Font("Consolas", 14), Brushes.White, new Point(300, 225));
+                    ATMscreen.Image = picture;
+
                     break;
 
+                case States.CARD_INVALID:
+                    g.DrawString("Card Invalid.", new Font("Consolas", 14), Brushes.White, new Point(100,100));
+                    ATMscreen.Image = picture;
+                    break;
+               
             }
 
         }
@@ -68,7 +85,17 @@ namespace projectATM
 
         private void checkCard()
         {
-            //TODO verification,switch to pin after the card is ok,db conn required
+            if (db.isCardValid(Convert.ToInt64(Form1.cardNumber)))
+            {
+                state = States.PIN;
+                printScreen();
+            }
+            else
+            {
+                state = States.CARD_INVALID;
+                printScreen();
+            }
+            
 
         }
 
@@ -109,7 +136,7 @@ namespace projectATM
         {
 
         }
-
+        //textless buttons
         private void btnLeft4_Click(object sender, EventArgs e)
         {
             switch (state)
@@ -117,6 +144,7 @@ namespace projectATM
                 case States.LANGUAGES:
                     this.language = Languages.SK;
                     checkCard();
+                    Console.WriteLine("Language: sk");
                     break;
             }
         }
@@ -128,6 +156,7 @@ namespace projectATM
                 case States.LANGUAGES:
                     this.language = Languages.EN;
                     checkCard();
+                    Console.WriteLine("Language: en");
                     break;
             }
 
@@ -162,7 +191,8 @@ namespace projectATM
         {
 
         }
-
+    
+        //keypad
         private void btn1_Click(object sender, EventArgs e)
         {
             if (state == States.PIN && pin.Length < 4)
