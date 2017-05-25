@@ -60,6 +60,7 @@
     <Compile Include="formATM.Designer.cs">
       <DependentUpon>formATM.cs</DependentUpon>
     </Compile>
+    <Compile Include="Messages.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">

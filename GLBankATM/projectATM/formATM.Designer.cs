@@ -47,7 +47,7 @@
             this.btn9 = new System.Windows.Forms.Button();
             this.btn8 = new System.Windows.Forms.Button();
             this.btn7 = new System.Windows.Forms.Button();
-            this.button21 = new System.Windows.Forms.Button();
+            this.btnBack = new System.Windows.Forms.Button();
             this.btn0 = new System.Windows.Forms.Button();
             this.button23 = new System.Windows.Forms.Button();
             this.ATMscreen = new System.Windows.Forms.PictureBox();
@@ -239,13 +239,15 @@
             this.btn7.UseVisualStyleBackColor = true;
             this.btn7.Click += new System.EventHandler(this.btn7_Click);
             // 
-            // button21
+            // btnBack
             // 
-            this.button21.Location = new System.Drawing.Point(365, 461);
-            this.button21.Name = "button21";
-            this.button21.Size = new System.Drawing.Size(71, 39);
-            this.button21.TabIndex = 23;
-            this.button21.UseVisualStyleBackColor = true;
+            this.btnBack.Location = new System.Drawing.Point(365, 461);
+            this.btnBack.Name = "btnBack";
+            this.btnBack.Size = new System.Drawing.Size(71, 39);
+            this.btnBack.TabIndex = 23;
+            this.btnBack.Text = "BACK";
+            this.btnBack.UseVisualStyleBackColor = true;
+            this.btnBack.Click += new System.EventHandler(this.btnBack_Click);
             // 
             // btn0
             // 
@@ -290,7 +292,7 @@
             this.ClientSize = new System.Drawing.Size(727, 534);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.ATMscreen);
-            this.Controls.Add(this.button21);
+            this.Controls.Add(this.btnBack);
             this.Controls.Add(this.btn0);
             this.Controls.Add(this.button23);
             this.Controls.Add(this.btn9);
@@ -342,7 +344,7 @@
         private System.Windows.Forms.Button btn9;
         private System.Windows.Forms.Button btn8;
         private System.Windows.Forms.Button btn7;
-        private System.Windows.Forms.Button button21;
+        private System.Windows.Forms.Button btnBack;
         private System.Windows.Forms.Button btn0;
         private System.Windows.Forms.Button button23;
         private System.Windows.Forms.PictureBox ATMscreen;
