@@ -257,8 +257,7 @@ namespace projectATM
                         {
                             state = States.PIN_CHANGE_FAILED;
                             printScreen();
-                        }
-                            
+                        }                            
                     }
                 }
             }
@@ -295,11 +294,8 @@ namespace projectATM
                             g.Clear(Color.Black);
                             g.DrawString(msgList[10], new Font("Consolas", 14), Brushes.White, new Point(100, 100));
                             ATMscreen.Image = picture;
-                        }
-                        
-                    }
-                    Console.WriteLine("failed parsing");
-                    
+                        }                        
+                    }                    
                 }
             }
         }
