@@ -40,7 +40,6 @@
             this.btn2 = new System.Windows.Forms.Button();
             this.btn3 = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
-            this.btnCancel = new System.Windows.Forms.Button();
             this.btn6 = new System.Windows.Forms.Button();
             this.btn5 = new System.Windows.Forms.Button();
             this.btn4 = new System.Windows.Forms.Button();
@@ -168,17 +167,6 @@
             this.btnOK.UseVisualStyleBackColor = false;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
-            // btnCancel
-            // 
-            this.btnCancel.BackColor = System.Drawing.Color.Crimson;
-            this.btnCancel.Location = new System.Drawing.Point(447, 369);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(71, 39);
-            this.btnCancel.TabIndex = 16;
-            this.btnCancel.Text = "Cancel";
-            this.btnCancel.UseVisualStyleBackColor = false;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
-            // 
             // btn6
             // 
             this.btn6.Location = new System.Drawing.Point(367, 369);
@@ -241,12 +229,13 @@
             // 
             // btnBack
             // 
+            this.btnBack.BackColor = System.Drawing.Color.CornflowerBlue;
             this.btnBack.Location = new System.Drawing.Point(365, 461);
             this.btnBack.Name = "btnBack";
             this.btnBack.Size = new System.Drawing.Size(71, 39);
             this.btnBack.TabIndex = 23;
             this.btnBack.Text = "BACK";
-            this.btnBack.UseVisualStyleBackColor = true;
+            this.btnBack.UseVisualStyleBackColor = false;
             this.btnBack.Click += new System.EventHandler(this.btnBack_Click);
             // 
             // btn0
@@ -298,7 +287,6 @@
             this.Controls.Add(this.btn9);
             this.Controls.Add(this.btn8);
             this.Controls.Add(this.btn7);
-            this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btn6);
             this.Controls.Add(this.btn5);
             this.Controls.Add(this.btn4);
@@ -337,7 +325,6 @@
         private System.Windows.Forms.Button btn2;
         private System.Windows.Forms.Button btn3;
         private System.Windows.Forms.Button btnOK;
-        private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btn6;
         private System.Windows.Forms.Button btn5;
         private System.Windows.Forms.Button btn4;

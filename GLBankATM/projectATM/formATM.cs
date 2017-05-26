@@ -23,6 +23,7 @@ namespace projectATM
             PIN_OK,
             PIN_WRONG,
             PIN_CHANGED,
+            PIN_CHANGE_FAILED,
             VIEW_BALANCE,
             WITHDRAW_CASH,
             CHANGE_PIN
@@ -36,9 +37,7 @@ namespace projectATM
             FIN,
             SWE,
             RU,
-            ESP,
-            DE,
-            FR//incoming feature
+            DE
         }
 
         private long id;
@@ -47,7 +46,9 @@ namespace projectATM
         private Messages messages=new Messages();
         private string[] msgList;
         private String pin = "";
+        private string amount;
         private int wrongPinAttemptCount;
+        private float accBalance;
 
         public formATM(long id)
         {
@@ -56,7 +57,7 @@ namespace projectATM
             state = States.LANGUAGES;
             wrongPinAttemptCount = 0;
             printScreen();
-            
+            accBalance = db.getAccountBalance(Convert.ToInt64(Form1.cardNumber));
         }
 
         static Bitmap picture = new Bitmap(399, 264);
@@ -70,9 +71,13 @@ namespace projectATM
             {
                 case States.LANGUAGES:
 
-                    g.DrawString("Choose a language", new Font("Consolas", 14), Brushes.White, new Point(100, 100));
-                    g.DrawString("SLOVAK", new Font("Consolas", 14), Brushes.White,new Point(10,225));
-                    g.DrawString("ENGLISH", new Font("Consolas", 14), Brushes.White, new Point(300, 225));
+                    g.DrawString("Choose a language", new Font("Consolas", 14), Brushes.White, new Point(100, 30));
+                    g.DrawString("SVK", new Font("Consolas", 14), Brushes.White,new Point(10,225));
+                    g.DrawString("FIN", new Font("Consolas", 14), Brushes.White, new Point(10, 150));
+                    g.DrawString("SWE", new Font("Consolas", 14), Brushes.White, new Point(340, 150));
+                    g.DrawString("ENG", new Font("Consolas", 14), Brushes.White, new Point(340, 225));
+                    g.DrawString("RUS", new Font("Consolas", 14), Brushes.White, new Point(10, 80));
+                    g.DrawString("DEU", new Font("Consolas", 14), Brushes.White, new Point(340, 80));
                     ATMscreen.Image = picture;
 
                     break;
@@ -101,7 +106,7 @@ namespace projectATM
 
                 case States.VIEW_BALANCE:
                     g.DrawString(msgList[3], new Font("Consolas", 14), Brushes.White, new Point(100, 100));
-                    g.DrawString(db.getAccountBalance(Convert.ToInt64(Form1.cardNumber))+ " €", new Font("Consolas", 14), Brushes.White, new Point(100, 150));
+                    g.DrawString(accBalance+ " €", new Font("Consolas", 14), Brushes.White, new Point(100, 150));
                     ATMscreen.Image = picture;
                     break;
 
@@ -115,7 +120,14 @@ namespace projectATM
                     ATMscreen.Image = picture;
                     break;
 
+                case States.PIN_CHANGE_FAILED:
+                    g.DrawString(msgList[8], new Font("Consolas", 14), Brushes.White, new Point(100, 100));
+                    ATMscreen.Image = picture;
+                    break;
+
                 case States.WITHDRAW_CASH:
+                    g.DrawString(msgList[9], new Font("Consolas", 14), Brushes.White, new Point(100, 100));
+                    ATMscreen.Image = picture;
                     break;
                
             }
@@ -138,6 +150,17 @@ namespace projectATM
                 g.DrawString(msgList[4], new Font("Consolas", 14), Brushes.White, new Point(100, 100));
                 g.DrawString("*", new Font("Consolas", 14), Brushes.White, new Point(x, y));
                 x = x + 20;
+                ATMscreen.Image = picture;
+            }
+        }
+
+        private void printAmount()
+        {
+            if (state == States.WITHDRAW_CASH)
+            {
+                x = 100;
+                g.DrawString(msgList[9], new Font("Consolas", 14), Brushes.White, new Point(100, 100));
+                g.DrawString(amount+ " €", new Font("Consolas", 14), Brushes.White, new Point(x, y));
                 ATMscreen.Image = picture;
             }
         }
@@ -203,7 +226,8 @@ namespace projectATM
                 {
                     state = States.PIN;
                     printScreen();
-                    pin = "";
+                    if(state!=States.CHANGE_PIN)
+                        pin = "";
                     x = 100;
                     wrongPinAttemptCount++;
                     db.updateWrongPinCount(Convert.ToInt64(Form1.cardNumber), wrongPinAttemptCount);
@@ -219,11 +243,64 @@ namespace projectATM
             {
                 if (pin.All(char.IsDigit))
                 {
-                    db.updatePin(Convert.ToInt64(Form1.cardNumber),pin);
-                    state = States.PIN_CHANGED;
-                    printScreen();
+                    Console.WriteLine(pin);
+                    int newPin = 0;
+                    if (Int32.TryParse(pin, out newPin))
+                    {
+                        int result=db.updatePin(Convert.ToInt64(Form1.cardNumber), newPin);
+                        if (result == 1)
+                        {
+                            state = States.PIN_CHANGED;
+                            printScreen();
+                        }
+                        else
+                        {
+                            state = States.PIN_CHANGE_FAILED;
+                            printScreen();
+                        }
+                            
+                    }
                 }
-              
+            }
+            if(state == States.WITHDRAW_CASH)
+            {
+                if (amount.All(char.IsDigit))
+                {
+                    int toWithdraw = 0;
+                    if (Int32.TryParse(amount, out toWithdraw))
+                    {
+                        if (toWithdraw % 5 == 0)
+                        {
+                            float newBalance = accBalance - toWithdraw;
+                            if (newBalance > 0)
+                            {
+                                Console.WriteLine("new balance:" + newBalance);
+                                db.withdrawCash(Convert.ToInt64(Form1.cardNumber), newBalance,toWithdraw);
+                                accBalance = newBalance;
+                                g.Clear(Color.Black);
+                                g.DrawString(msgList[12]+" "+newBalance, new Font("Consolas", 14), Brushes.White, new Point(100, 100));
+                                ATMscreen.Image = picture;
+                            }
+                            else
+                            {
+                                Console.WriteLine("low on money");
+                                g.Clear(Color.Black);
+                                g.DrawString(msgList[11], new Font("Consolas", 14), Brushes.White, new Point(100, 100));
+                                ATMscreen.Image = picture;
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("invalid amount");
+                            g.Clear(Color.Black);
+                            g.DrawString(msgList[10], new Font("Consolas", 14), Brushes.White, new Point(100, 100));
+                            ATMscreen.Image = picture;
+                        }
+                        
+                    }
+                    Console.WriteLine("failed parsing");
+                    
+                }
             }
         }
 
@@ -265,6 +342,11 @@ namespace projectATM
                     state = States.VIEW_BALANCE;
                     printScreen();
                     break;
+                case States.LANGUAGES:
+                    this.language = Languages.FIN;
+                    msgList = messages.getMessages("finnish");
+                    checkCard();
+                    break;
             }
         }
 
@@ -272,7 +354,11 @@ namespace projectATM
         {
             switch (state)
             {
-
+                case States.LANGUAGES:
+                    this.language = Languages.SWE;
+                    msgList = messages.getMessages("swedish");
+                    checkCard();
+                    break;
             }
         }
 
@@ -286,6 +372,11 @@ namespace projectATM
                     x = 100;
                     printScreen();
                     break;
+                case States.LANGUAGES:
+                    this.language = Languages.RU;
+                    msgList = messages.getMessages("russian");
+                    checkCard();
+                    break;
             }
         }
 
@@ -293,7 +384,11 @@ namespace projectATM
         {
             switch (state)
             {
-
+                case States.LANGUAGES:
+                    this.language = Languages.DE;
+                    msgList = messages.getMessages("german");
+                    checkCard();
+                    break;
             }
         }
 
@@ -330,6 +425,11 @@ namespace projectATM
                 printScreen();
                 x = 100;
             }
+            if (state == States.WITHDRAW_CASH)
+            {
+                amount = amount + '1';
+                printAmount();
+            }
 
         }
 
@@ -346,6 +446,11 @@ namespace projectATM
                 printScreen();
                 x = 100;
             }
+            if (state == States.WITHDRAW_CASH)
+            {
+                amount = amount + '2';
+                printAmount();
+            }
         }
 
         private void btn3_Click(object sender, EventArgs e)
@@ -360,6 +465,11 @@ namespace projectATM
                 pin = "";
                 printScreen();
                 x = 100;
+            }
+            if (state == States.WITHDRAW_CASH)
+            {
+                amount = amount + '3';
+                printAmount();
             }
         }
 
@@ -376,6 +486,11 @@ namespace projectATM
                 printScreen();
                 x = 100;
             }
+            if (state == States.WITHDRAW_CASH)
+            {
+                amount = amount + '4';
+                printAmount();
+            }
         }
 
         private void btn5_Click(object sender, EventArgs e)
@@ -390,6 +505,11 @@ namespace projectATM
                 pin = "";
                 printScreen();
                 x = 100;
+            }
+            if (state == States.WITHDRAW_CASH)
+            {
+                amount = amount + '5';
+                printAmount();
             }
         }
 
@@ -406,6 +526,11 @@ namespace projectATM
                 printScreen();
                 x = 100;
             }
+            if (state == States.WITHDRAW_CASH)
+            {
+                amount = amount + '6';
+                printAmount();
+            }
         }
 
         private void btn7_Click(object sender, EventArgs e)
@@ -420,6 +545,11 @@ namespace projectATM
                 pin = "";
                 printScreen();
                 x = 100;
+            }
+            if (state == States.WITHDRAW_CASH)
+            {
+                amount = amount + '7';
+                printAmount();
             }
         }
 
@@ -436,6 +566,11 @@ namespace projectATM
                 printScreen();
                 x = 100;
             }
+            if (state == States.WITHDRAW_CASH)
+            {
+                amount = amount + '8';
+                printAmount();
+            }
         }
 
         private void btn9_Click(object sender, EventArgs e)
@@ -450,6 +585,11 @@ namespace projectATM
                 pin = "";
                 printScreen();
                 x = 100;
+            }
+            if (state == States.WITHDRAW_CASH)
+            {
+                amount = amount + '9';
+                printAmount();
             }
         }
 
@@ -466,12 +606,22 @@ namespace projectATM
                 printScreen();
                 x = 100;
             }
+            if (state == States.WITHDRAW_CASH)
+            {
+                amount = amount + '0';
+                printAmount();
+            }
         }
 
         private void btnBack_Click(object sender, EventArgs e)
         {
-            state = States.PIN_OK;
-            printScreen();
+            if (state != States.LANGUAGES&&state!=States.PIN)
+            {
+                state = States.PIN_OK;
+                amount = "";
+                printScreen();
+            }
+           
         }
     }
 }

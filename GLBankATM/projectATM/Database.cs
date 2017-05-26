@@ -46,6 +46,8 @@ namespace projectATM
                 else
                     Console.WriteLine("Card doesn't exist.");
                 r.Close();
+
+                c.Close();
             }
             return false;
         }
@@ -71,6 +73,7 @@ namespace projectATM
                 else
                     Console.WriteLine("Card is blocked.");
                 r.Close();
+                c.Close();
             }
             return false;
 
@@ -92,6 +95,7 @@ namespace projectATM
                 }
                 else
                     r.Close();
+                c.Close();
                 return false;
             }
             return false;            
@@ -116,6 +120,7 @@ namespace projectATM
                     r.Close();
                 }
             }
+            c.Close();
             return count;
         }
 
@@ -127,6 +132,7 @@ namespace projectATM
             {
                 MySqlCommand cmd = new MySqlCommand(query, c);
                 cmd.ExecuteNonQuery();
+                c.Close();
             }
         }
 
@@ -138,6 +144,7 @@ namespace projectATM
             {
                 MySqlCommand cmd = new MySqlCommand(query, c);
                 cmd.ExecuteNonQuery();
+                c.Close();
             }
         }
 
@@ -160,18 +167,70 @@ namespace projectATM
                     r.Close();
                 }
             }
+            c.Close();
             return balance;
         }
 
-        public void updatePin(long idCard,string pin)
+        public int updatePin(long idCard,int pin)
         {
-            string query = "update cards set pin=" + pin + " where idCard=" + idCard;
+            string query = "update cards set pin="+pin+" where cardnumber=" + idCard;
             MySqlConnection c = openConnection();
-
+            int result = 0;
             if (c != null)
             {
                 MySqlCommand cmd = new MySqlCommand(query, c);
+                result = cmd.ExecuteNonQuery();
+                c.Close();
+
+            }
+            return result;
+        }
+
+        public void withdrawCash(long idCard,float newBalance,float amount)
+        {
+            MySqlConnection c = openConnection();
+            MySqlTransaction t = c.BeginTransaction();
+            try
+            {
+                withdraw(idCard, newBalance,t);
+                logWithdrawal(idCard, amount,t);
+                t.Commit();
+            }
+            catch(MySqlException e)
+            {
+                Console.WriteLine(e);
+                t.Rollback();
+            }
+            c.Close();
+        }
+
+        private int logWithdrawal(long idCard,float amount,MySqlTransaction t)
+        {
+            string query = "insert into atmwithdrawals(amount,idatm,cardnumber) values(" + amount + ",1," + idCard + ")";
+            MySqlConnection c = openConnection();
+            int result=0;
+            if (c != null)
+            {
+                MySqlCommand cmd = new MySqlCommand(query, c);
+                cmd.Transaction = t;
+                result=cmd.ExecuteNonQuery();
+                c.Close();
+
+            }
+            Console.WriteLine("log "+result);
+            return result;
+        }
+
+        private void withdraw(long idCard,float newBalance, MySqlTransaction t)
+        {
+            string query = "update accounts inner join cards on cards.idacc = accounts.idacc set balance=" + newBalance + " where cardnumber=" + idCard;
+            MySqlConnection c = openConnection();
+            if (c != null)
+            {
+                MySqlCommand cmd = new MySqlCommand(query, c);
+                cmd.Transaction = t;
                 cmd.ExecuteNonQuery();
+                c.Close();
 
             }
         }
